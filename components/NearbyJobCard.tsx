@@ -5,6 +5,7 @@ import { COLORS, FONT, SIZES } from '@/constants'
 type NearbyJobCardProps = {
     item: any
 }
+const placeholder = 'https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg'
 const NearbyJobCard = ({item}:NearbyJobCardProps) => {
   return (
     <View style={styles.container}>
@@ -12,15 +13,17 @@ const NearbyJobCard = ({item}:NearbyJobCardProps) => {
             <View style={styles.logoContainer}>
                 <Image 
                 resizeMode='contain'
-                source={item.logo}
+                source={{uri:item?.employer_logo||placeholder}}
                 style={styles.logo}/>
             </View>
             <View style={styles.jobContainer}>
-                <Text style={styles.jobTitle}>{item.title}</Text>
-                <Text style={styles.jobType}>{item.jobType}</Text>
+                <Text style={styles.jobTitle} numberOfLines={1}>
+                    {item?.job_title.length>25
+                    ?item?.job_title.slice(0,25)+'...':
+                    item?.job_title}</Text>
+                <Text style={styles.jobType}>{item?.job_employment_type}</Text>
             </View>   
         </View>  
-        <Text style={styles.salary}>{item.salary}</Text>
     </View>
   )
 }
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
         fontSize:SIZES.medium,
         color: COLORS.gray
     },
-    salary:{
+    country:{
         fontFamily:FONT.bold,
         fontSize:SIZES.large - 2,
         color: COLORS.primary

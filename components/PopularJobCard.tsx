@@ -1,35 +1,39 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { COLORS, FONT, SIZES } from '@/constants'
+import { useFocusEffect } from 'expo-router'
 
 type PopularJobCardProps = {
     item?:any,
     selectedJob?:string,
     handlePressCard:(item:any)=>void
 }
+const placeholder = 'https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg'
 const PopularJobCard = ({item,selectedJob,handlePressCard}:PopularJobCardProps) => {
+    const isSelected = selectedJob === item?.job_id
+    
   return (
     <TouchableOpacity 
     onPress={()=>handlePressCard(item)}
     style={[styles.container,
-        selectedJob===item.id && {backgroundColor:COLORS.primary}
+        isSelected&&{backgroundColor:COLORS.primary}
     ]}>
         <View style={styles.logoContainer}>
             <Image 
             resizeMode='contain'
-            source={item?.logo}
+            source={{uri:item?.employer_logo||placeholder}}
             style={styles.logo}/>
         </View>
-        <Text style={styles.companyName}>{item?.company}</Text>
+        <Text style={styles.companyName} numberOfLines={1}>{item?.employer_name}</Text>
         <View style={styles.infoContainer}>
             <Text style={[styles.jobTitle,
-                selectedJob === item.id && {color:'white'}
-            ]}>{item?.jobTitle}</Text>
+                selectedJob === item.job_id && {color:'white'}
+            ]} numberOfLines={1}>{item?.job_title}</Text>
             <View style={styles.descriptionContainer}>
-                <Text style={[styles.salary,
-                    selectedJob === item.id && {color:'white'}
-                ]}>{item?.salary} - </Text>
-                <Text style={styles.location}>{item?.location}</Text>
+                <Text style={[styles.country,
+                    selectedJob === item.job_id && {color:'white'}
+                ]}>{item?.job_country} - </Text>
+                <Text style={styles.location}>{item?.job_location}</Text>
             </View>
         </View>
     </TouchableOpacity>
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
     descriptionContainer:{
         flexDirection:'row',
     },
-    salary:{
+    country:{
         fontFamily:FONT.regular,
         fontSize:SIZES.medium - 2
     },
