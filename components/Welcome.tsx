@@ -2,11 +2,12 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import React, { useState } from 'react'
 import { COLORS, FONT, SIZES } from '@/constants'
 import Feather from '@expo/vector-icons/Feather'
+import { useRouter } from 'expo-router'
 
 const Welcome = () => {
   const jobTypes = ['Full-time','Part-time','Contractor'] 
   const[activeJobType,setActiveJobType]=useState("Full-time") 
-
+  const router = useRouter()
   return (
     <View>
         <View style={styles.titleContainer}>
@@ -36,6 +37,7 @@ const Welcome = () => {
                 ]}
                 onPress={()=>{
                     setActiveJobType(job)
+                    // router.push('/')
                 }}>
                     <Text style={[styles.jobTitle,
                         activeJobType === job && {color:COLORS.secondary}

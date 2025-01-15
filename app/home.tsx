@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, Image, ScrollView} from 'react-native'
 import React from 'react'
 import { COLORS, SIZES} from '@/constants'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Welcome from '@/components/Welcome'
+import PopularJobs from '@/components/PopularJobs'
+import NearbyJobs from '@/components/NearbyJobs'
 
 export default function Home() {
   return (
@@ -29,6 +30,8 @@ export default function Home() {
       showsVerticalScrollIndicator={false}>
         <View style={styles.contentContainer}>
             <Welcome/>
+            <PopularJobs/>
+            <NearbyJobs/>
         </View>
       </ScrollView>
     </View>
