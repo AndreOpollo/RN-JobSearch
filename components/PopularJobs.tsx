@@ -4,38 +4,31 @@ import { COLORS, FONT, SIZES } from '@/constants'
 import {FlashList} from '@shopify/flash-list'
 import PopularJobCard from './PopularJobCard'
 import useFetch from '@/hook/useFetch'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 
 const PopularJobs = () => {
  const router = useRouter()   
- const{isLoading,data,error}=useFetch("search",{
+ const{isLoading,data,error,refetch}=useFetch("search",{
   query:'Android',
   num_pages:1
  })
- const params = useLocalSearchParams()
- const [selectedJob, setSelectedJob] = useState<string>(params?.selected as string || "")
-//  const handleCardPress = (item:any)=>{
-//     if(item?.job_id){
-//         setSelectedJob(item.job_id)
-//         console.log('Changing selected job',item.job_id)
-//         router.push({
-//             pathname:'/details/[id]',
-//             params:{
-//                 id:item?.job_id,
-//             selected:item?.job_id}
-//         })}
-     
+ const [selectedJob, setSelectedJob] = useState('')
+ const handleCardPress = (item:any)=>{
+    setTimeout(()=>{
+        router.push({
+            pathname:'/details/[id]',
+            params:{
+                id:item?.job_id,}
+    })
+    },100)
+        
+    setSelectedJob(item.job_id)   
 
-// }
-const handleCardPress = useCallback((item: any) => {
-    if (item?.job_id) {
-        setSelectedJob(item.job_id)
-      router.push({
-        pathname: '/details/[id]',
-        params: {id: item?.job_id}
-      })
-    }
-  }, [])
+}
+useEffect(()=>{
+    setSelectedJob("")
+},[])
+
 
 
 return (

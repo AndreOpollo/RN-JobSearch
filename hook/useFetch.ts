@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react"
 import axios from 'axios'
 
+interface ApiResponse {
+    data: [];
+    isLoading: boolean;
+    error: string | null;
+  }
 const useFetch = (endpoint:string,query:{})=>{
     const[data,setData] = useState([])
     const[isLoading,setIsLoading]=useState(false)
