@@ -4,7 +4,13 @@ import { COLORS, FONT, SIZES } from '@/constants'
 import Feather from '@expo/vector-icons/Feather'
 import { useRouter } from 'expo-router'
 
-const Welcome = () => {
+
+interface WelcomeProps {
+    handleClick:()=>void,
+    searchTerm:string,
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>
+}
+const Welcome = ({handleClick,searchTerm,setSearchTerm}:WelcomeProps) => {
   const jobTypes = ['Full-time','Part-time','Contractor'] 
   const[activeJobType,setActiveJobType]=useState("Full-time") 
   const router = useRouter()
@@ -18,10 +24,12 @@ const Welcome = () => {
             <View style={styles.searchWrapper}>
                 <TextInput
                 style={styles.searchBar}
+                value={searchTerm}
+                onChangeText={(text)=>setSearchTerm(text)}
                 placeholder='What are you looking for?'
                 />
             </View>
-            <TouchableOpacity style={styles.searchBtn}>
+            <TouchableOpacity style={styles.searchBtn} onPress={handleClick}>
                 <Feather name='search' size={SIZES.large} color={COLORS.white} style={styles.searchIcon}/>
             </TouchableOpacity>        
         </View>
@@ -29,7 +37,7 @@ const Welcome = () => {
         horizontal 
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
-            {jobTypes.map((job,index)=>(
+            {jobTypes.map((job:any,index)=>(
                 <TouchableOpacity 
                 key={index}
                 style={[styles.jobContainer,
@@ -37,7 +45,12 @@ const Welcome = () => {
                 ]}
                 onPress={()=>{
                     setActiveJobType(job)
-                    // router.push('/')
+                    router.push({
+                        pathname:'/search/[id]',
+                        params:{
+                            id:job
+                        }
+                    })
                 }}>
                     <Text style={[styles.jobTitle,
                         activeJobType === job && {color:COLORS.secondary}

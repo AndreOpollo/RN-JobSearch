@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
-import React, { act, useEffect, useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native'
+import React, { act, useCallback, useEffect, useState } from 'react'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { COLORS, FONT, SIZES } from '@/constants'
@@ -21,10 +21,11 @@ interface JobDetails {
         Qualifications:[],
         Responsibilities:[]
     },
-    job_description:string    
+    job_description:string,
+    job_google_link:string
   }
   
-  // Define the structure of the API response
+  
   interface ApiResponse {
     data: JobDetails[];
     isLoading: boolean;
@@ -33,12 +34,21 @@ interface JobDetails {
 const Details = () => {
   const {id} = useLocalSearchParams()
   const router = useRouter()
-  const {isLoading,error,data = [] as JobDetails[]} = useFetch("job-details",{
+  const {refetch,isLoading,error,data = [] as JobDetails[]} = useFetch("job-details",{
     job_id:`${id}`
   }
   ) 
   const tabs = ['Qualifications','Responsibilities','About'] 
   const [activeTab,setActiveTab] = useState(tabs[0])
+  const[refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(()=>{
+    setRefreshing(true)
+    refetch()
+    setRefreshing(false)
+
+  },[])
+
   const handleTab = (item:any)=>{
     setActiveTab(item)
   }
@@ -76,7 +86,11 @@ const Details = () => {
             <Entypo name='share' size={SIZES.xLarge} style={styles.headers}/>
         )
        }}/> 
-       <ScrollView showsVerticalScrollIndicator={false}>
+       <ScrollView 
+       showsVerticalScrollIndicator={false}
+       refreshControl={
+        <RefreshControl onRefresh={onRefresh} refreshing={refreshing}/>
+       }>
             <View style={styles.contentContainer}>
                 {isLoading?(
                     <ActivityIndicator size={'large'} color={COLORS.primary}/>
@@ -105,7 +119,7 @@ const Details = () => {
                 }
                 </View>
                 {displayTabContent()}
-                <Footer/>
+                <Footer url={data[0]?.job_google_link ?? 'https://careers.google.com/jobs/results'}/>
             </View>
        </ScrollView>
     </View>

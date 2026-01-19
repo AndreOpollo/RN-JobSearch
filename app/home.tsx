@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, ScrollView} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { COLORS, SIZES} from '@/constants'
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Welcome from '@/components/Welcome'
@@ -9,6 +9,8 @@ import PopularJobs from '@/components/PopularJobs'
 import NearbyJobs from '@/components/NearbyJobs'
 
 export default function Home() {
+  const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <View style={styles.container}>
         <StatusBar translucent={true} />
@@ -29,7 +31,20 @@ export default function Home() {
       <ScrollView 
       showsVerticalScrollIndicator={false}>
         <View style={styles.contentContainer}>
-            <Welcome/>
+            <Welcome 
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm}
+            handleClick={()=>{
+              if(searchTerm){
+                router.push({
+                  pathname:'/search/[id]',
+                  params:{
+                    id:searchTerm
+                  }
+                })
+              }
+            }
+            }/>
             <PopularJobs/>
             <NearbyJobs/>
         </View>

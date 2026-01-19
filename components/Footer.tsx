@@ -1,17 +1,19 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native'
 import React from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
 import { COLORS, FONT, SIZES } from '@/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
-export default function Footer() {
+interface FooterProps {
+  url:string
+}
+export default function Footer({url}:FooterProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.favoriteBtn}>
         <Entypo name='heart-outlined' size={SIZES.xLarge} color={COLORS.tertiary}/>        
       </TouchableOpacity>
-      <TouchableOpacity style={styles.applyBtn}>
+      <TouchableOpacity style={styles.applyBtn} onPress={()=>Linking.openURL(url)}>
         <Text style={styles.applyText}>Apply for job</Text>
       </TouchableOpacity>
     </View>
